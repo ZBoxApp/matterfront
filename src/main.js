@@ -11,8 +11,8 @@ var app = require('electron').app,
     Q = require('q'),
     appName = require('./package.json').name,
     version = require('./package.json').version;
-// Report crashes to our server.
 
+// Report crashes to our server.
 require('crash-reporter').start();
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -92,7 +92,6 @@ var handleStartupEvent = function() {
             break;
         case '--squirrel-install':
         case '--squirrel-updated':
-            deleteShortcut();
             createShortcut();
             app.quit();
 
@@ -102,7 +101,6 @@ var handleStartupEvent = function() {
             // --squirrel-updated handlers
 
             // Always quit when done
-            deleteShortcut();
             app.quit();
 
             return true;
@@ -114,9 +112,9 @@ var handleStartupEvent = function() {
             return true;
     }
 
-    if(!squirrelCommand) {
-        createShortcut();
-    }
+    //if(!squirrelCommand) {
+    //    createShortcut();
+    //}
 };
 
 if (handleStartupEvent()) {
@@ -142,7 +140,7 @@ var verifyService = function(url) {
 };
 
 platform = process.platform + '-' + process.arch;
-updater.setFeedURL(url.resolve(config.oauth, 'version/chatDesktop/' + version + '/' + platform));
+updater.setFeedURL(url.resolve(config.services.oauth, 'version/chatDesktop/' + version + '/' + platform));
 
 app.checkVersion = function(manual) {
     manualCheck = manual;
@@ -200,12 +198,12 @@ app.on('window-all-closed', function() {
 });
 
 app.on('ready', function() {
-    splashWindow = new BrowserWindow({width:600, height: 307, icon: appIcon, frame: false, 'skip-taskbar': true, transparent: true});
-    mainWindow = new BrowserWindow({width: 1024, height: 600, icon: appIcon, frame: true, show: false});
+    splashWindow = new BrowserWindow({width:config.splash.width, height: config.splash.height, icon: appIcon, frame: false, 'skip-taskbar': true, transparent: true});
+    mainWindow = new BrowserWindow({width: config.window.width, height: config.window.height, icon: appIcon, frame: true, show: false});
 
     splashWindow.loadURL('file://' + __dirname + '/splash.html');
 
-    src = config.url || 'file://' + __dirname + '/nosrc.html';
+    src = config.services.chat || 'file://' + __dirname + '/nosrc.html';
 
     splashWindow.on('close', function() {
         if(isValid) {
@@ -251,7 +249,7 @@ app.on('activate', function(e, hasVisibleWindows) {
         mainWindow.focus();
     } else {
         if (mainWindow === null) {
-            mainWindow = new BrowserWindow({width: 1024, height: 600});
+            mainWindow = new BrowserWindow({width: config.window.width, height: config.window.height});
         } else {
             mainWindow.show();
         }
@@ -263,7 +261,7 @@ app.on('before-quit', function(e) {
 });
 
 ipc.on('check-services', function(event) {
-    Q.all([ verifyService(url.resolve(config.oauth, 'status')), verifyService(config.url) ])
+    Q.all([ verifyService(url.resolve(config.services.oauth, 'status')), verifyService(config.services.chat) ])
         .then(function() {
             return event.sender.send('service-status', true);
         })

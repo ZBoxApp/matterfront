@@ -11,13 +11,13 @@ var gulp = require('gulp'),
 process.NODE_ENV = 'production';
 
 function makePackage(platform, arch) {
-    var packageJson = require('./src/package.json');
+    var packageJson = require('./package.json');
     packager({
         dir: './src',
         name: packageJson.name,
         platform: platform,
         arch: arch,
-        version: '0.35.0',
+        version: packageJson.devDependencies["electron-prebuilt"].replace("^", ""),
         out: './release',
         cache: './cache',
         sign: 'bruna',
@@ -32,8 +32,7 @@ function makePackage(platform, arch) {
             ProductVersion: packageJson.version,
             FileDescription: packageJson.name,
             OriginalFilename: packageJson.name + '.exe',
-            LegalCopyright: 'Copyright (C) 2015. ZBox Spa. Todos los derechos reservados',
-            SquirrelAwareVersion: '1'
+            LegalCopyright: 'Copyright (C) 2015. ZBox Spa. Todos los derechos reservados'
         },
         icon: 'resources/zbox'
     }, function(err, appPath) {

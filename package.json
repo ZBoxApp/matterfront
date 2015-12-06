@@ -1,20 +1,17 @@
 {
   "name": "ZBoxChat",
-  "version": "1.1.0-beta2",
-  "description": "Mattermost frontend app powered by electron",
-  "homepage": "https://github.com/lloeki/matterfront",
-  "author": "Brian Vanderbusch <brian@hackerhappyhour.com> (https://github.com/H3Chief)",
-  "contributors": [
-    "Loic Nageleisen <loic.nageleisen@gmail.com> (http://raptu.re)"
-  ],
+  "version": "1.1.0-beta3",
+  "description": "ZBox Chat frontend app powered by electron",
+  "homepage": "https://github.com/ZBoxApp/matterfront",
+  "author": "Elias Nahum <elias@zboxapp.com> (https://github.com/H3Chief)",
   "scripts": {
     "start": "electron ./src",
     "build": "electron-packager ./src matterfront --out=dist --ignore='^/dist$' --prune --asar --platform=all --arch=all --version=$npm_package_electronVersion --app-bundle-id='org.matterfront.app' --app-version=$npm_package_version --helper-bundle-id='org.matterfront.app.helper' --overwrite"
   },
-  "electronVersion": "0.35.0",
+  "electronVersion": "0.35.4",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lloeki/matterfront"
+    "url": "https://github.com/ZBoxApp/matterfront"
   },
   "keywords": [
     "Mattermost",
@@ -22,13 +19,13 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lloeki/matterfront/issues"
+    "url": "https://github.com/ZBoxApp/matterfront/issues"
   },
   "devDependencies": {
     "del": "^2.1.0",
-    "electron-prebuilt": "0.35.0",
+    "electron-prebuilt": "^0.35.4",
     "grunt": "^0.4.5",
-    "grunt-electron-installer": "^1.1.0",
+    "grunt-electron-installer": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-electron": "0.0.9",
     "gulp-ignore": "^2.0.1",

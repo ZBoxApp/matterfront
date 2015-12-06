@@ -80,12 +80,7 @@
         });
 
         webview.addEventListener('dom-ready', function() {
-            if (navigator.onLine) {
-                overlay.style.opacity = 0;
-                overlay.style['z-index'] = -1;
-            }
-
-            if(webview.getUrl().indexOf('oauth.zboxapp.com') > -1) {
+            if(webview.getURL().indexOf('oauth.zboxapp.com') > -1) {
                 var credentials = localStorage.credentials ? JSON.parse(localStorage.getItem('credentials')) : null || { username: '', password: ''};
                 webview.executeJavaScript("jQuery('#username').val('"+ credentials.username +"'); jQuery('#password').val('"+ credentials.password +"');");
             }
@@ -186,6 +181,8 @@
                 // TODO: add spinner/connecting icon
                 if (first) {
                     console.log('connecting');
+                    overlay.style.opacity = 0;
+                    overlay.style['z-index'] = -1;
                 } else {
                     console.log('reconnecting');
                     setTimeout(function() { webview.reload(); }, 500);
@@ -200,13 +197,17 @@
         };
 
         var startLoading = function() {
-            loading.style.opacity = 0.5;
-            loading.style['z-index'] = 100;
+            setTimeout(function() {
+                loading.style.opacity = 0.5;
+                loading.style['z-index'] = 100;
+            }, 500);
         };
 
         var endLoading = function() {
-            loading.style.opacity = 0;
-            loading.style['z-index'] = -1;
+            setTimeout(function() {
+                loading.style.opacity = 0;
+                loading.style['z-index'] = -1;
+            }, 500);
         };
 
         handleOnline(true);
