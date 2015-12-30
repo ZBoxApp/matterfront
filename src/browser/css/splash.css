@@ -37,7 +37,7 @@ body {
 }
 
 .outer {
-    background-color: #21bbef;
+    background-color: #000;
     display: table;
     position: absolute;
     width: 100%;
