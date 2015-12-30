@@ -3,6 +3,6 @@
   "version": "1.0.1",
   "description": "Mattermost frontend app powered by electron",
   "dependencies": {
-    "jquery-backstretch": "~2.0.4"
+    "bootstrap": "~3.3.6"
   }
 }

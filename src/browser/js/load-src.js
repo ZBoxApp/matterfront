@@ -36,6 +36,9 @@
                     console.log(event.args[0]);
                     localStorage.setItem('credentials', JSON.stringify(event.args[0]));
                     break;
+                case 'no-team':
+                    mainWindow.loadURL('file://' + app.getAppPath() + '/browser/views/find.html');
+                    break;
             }
 
             console.log('ipc-message');

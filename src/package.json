@@ -1,9 +1,9 @@
 {
-  "name": "ZBoxChat",
-  "version": "1.1.0-beta3",
+  "name": "ZBoxNow",
+  "version": "1.2.0-beta1",
   "main": "main.js",
-  "description": "ZBox Chat frontend app powered by electron",
-  "author": "Elias Nahum <elias@zboxapp.com> (https://github.com/H3Chief)",
+  "description": "ZBox Now! frontend app powered by electron",
+  "author": "Elias Nahum <elias@zboxapp.com> (https://github.com/ZBoxApp)",
   "license": "MIT",
   "dependencies": {
     "q": "^1.4.1",

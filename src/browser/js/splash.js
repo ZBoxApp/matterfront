@@ -2,14 +2,15 @@ var ipc = require('electron').ipcRenderer,
     shell = require('electron').shell;
 
 $(document).ready(function() {
-    var body = $('body'),
-        msgs = $('footer div'),
+    var progress = $('.progress-bar'),
+        msgs = $('.info'),
         retryInterval = null;
 
     var handleOnline = function() {
         var isOnline = navigator.onLine;
-        msgs.css('color', '#000');
+        msgs.css('color', '#fff');
         msgs.text('verificando conexión...');
+        progress.css('width', '10%');
         if(retryInterval) {
             clearInterval(retryInterval);
         }
@@ -22,8 +23,10 @@ $(document).ready(function() {
     };
 
     var online = function() {
-        msgs.css('color', '#000');
+        msgs.css('color', '#fff');
+        progress.css('width', '25%');
         setTimeout(function () {
+            progress.css('width', '45%');
             msgs.text('verificando servicios...');
             ipc.send('check-services');
         }, 1000);
@@ -55,8 +58,10 @@ $(document).ready(function() {
 
     ipc.on('service-status', function(status) {
         if(status) {
-            msgs.css('color', '#000');
+            msgs.css('color', '#fff');
+            progress.css('width', '50%');
             msgs.text('Verificando versión...');
+            progress.css('width', '75%');
             ipc.send('version');
         } else {
             exitWithError('Los servicios no están disponibles, intente más tarde.');
@@ -73,10 +78,15 @@ $(document).ready(function() {
         }
     });
 
+    ipc.on('ready', function() {
+        progress.css('width', '100%');
+        setTimeout(function() {
+            msgs.text('Listo!');
+        }, 500);
+    });
+
     window.addEventListener('online', handleOnline );
     window.addEventListener('offline', handleOnline );
-
-    $.backstretch(["./splash.png"]);
 
     setTimeout(handleOnline, 500);
 });

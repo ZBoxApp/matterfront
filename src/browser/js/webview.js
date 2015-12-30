@@ -38,6 +38,27 @@
         if (notify) notifyHost();
     };
 
+    var getCookie = function (cname) {
+        var ca = document.cookie.split(';');
+        return ca.reduce(function(p, c) { if(c.indexOf(cname) > -1) { return c.split('=')[1].trim() } }, null) || null;
+    };
+
+    var teamName = getCookie("MMTEAM");
+    var pathname = window.location.pathname;
+
+    switch (pathname) {
+        case '/':
+            if (teamName) {
+                window.location.href = '/' + teamName;
+            } else {
+                ipc.sendToHost('no-team');
+            }
+            break;
+        case '/find_team':
+            ipc.sendToHost('no-team');
+            break;
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         // observe the DOM for mutations, specifically the .ps-container
         // which contains all the sidebar channels

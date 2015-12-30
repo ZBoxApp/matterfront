@@ -9,11 +9,9 @@ var app = require('electron').app,
     fs = require('fs'),
     request = require('request'),
     Q = require('q'),
+    menu = require('./menu.js'),
     appName = require('./package.json').name,
     version = require('./package.json').version;
-
-// Report crashes to our server.
-require('crash-reporter').start();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -28,12 +26,10 @@ var mainWindow = null,
     manualCheck = false,
     config = {},
     configPaths = [
-        path.join('.', 'config.json'),
-        path.join(app.getPath('userData'), 'config.json'),
         path.join(app.getAppPath(), 'config.json')
     ],
     i = configPaths.length,
-    appIcon = NativeImage.createFromPath(path.join(__dirname, '../resources/mattermost.ico'));
+    appIcon = NativeImage.createFromPath(path.join(__dirname, '../../resources/mattermost.ico'));
 
 
 for (; --i >= 0;) {
@@ -54,9 +50,9 @@ var handleStartupEvent = function() {
         return false;
     }
 
-    app.setAppUserModelId('com.squirrel.ZBoxChat.ZBoxChat');
+    app.setAppUserModelId('com.squirrel.ZBoxNow.ZBoxNow');
 
-    desktopShortcut = path.join(process.env.USERPROFILE, 'Desktop/ZboxChat.lnk');
+    desktopShortcut = path.join(process.env.USERPROFILE, 'Desktop/ZboxNow.lnk');
     dir = path.join(process.env.USERPROFILE, '/AppData/Local/', appName, 'app-' + version);
     updatePath = path.join(dir, '../Update.exe');
     file = path.join(dir, appName + '.exe');
@@ -147,8 +143,14 @@ app.checkVersion = function(manual) {
     updater.checkForUpdates();
 };
 
+app.getService = function() {
+    return config.services.chat;
+};
+
 updater.on('error', function(err) {
     var msg = "Ocurrió un error al verificar si existen actualizaciones";
+    console.log(msg);
+    console.log(err);
     if(manualCheck) {
         if (splashWindow) {
             splashWindow.webContents.send('update-error', msg);
@@ -163,6 +165,7 @@ updater.on('checking-for-update', function() {
 });
 
 updater.on('update-available', function() {
+    console.log('update-available');
     if(splashWindow) {
         updateAvailable = true;
         isValid = true;
@@ -171,15 +174,20 @@ updater.on('update-available', function() {
 });
 
 updater.on('update-not-available', function() {
+    console.log('update-not-available');
     if (mainWindow && manualCheck) {
         mainWindow.webContents.send('no-update');
     } else if(splashWindow) {
         isValid = true;
-        splashWindow.close();
+        splashWindow.webContents.send('ready');
+        setTimeout(function() {
+            splashWindow.close();
+        }, 1000);
     }
 });
 
 updater.on('update-downloaded', function() {
+    console.log('update-downloaded');
     if(splashWindow) {
         splashWindow.webContents.send('update-ready');
     } else if (mainWindow) {
@@ -201,9 +209,9 @@ app.on('ready', function() {
     splashWindow = new BrowserWindow({width:config.splash.width, height: config.splash.height, icon: appIcon, frame: false, 'skip-taskbar': true, transparent: true});
     mainWindow = new BrowserWindow({width: config.window.width, height: config.window.height, icon: appIcon, frame: true, show: false});
 
-    splashWindow.loadURL('file://' + __dirname + '/splash.html');
+    splashWindow.loadURL('file://' + __dirname + '/browser/views/splash.html');
 
-    src = config.services.chat || 'file://' + __dirname + '/nosrc.html';
+    src = config.services.chat || 'file://' + __dirname + '/browser/views/nosrc.html';
 
     splashWindow.on('close', function() {
         if(isValid) {
@@ -218,7 +226,7 @@ app.on('ready', function() {
         }
     });
 
-    mainWindow.loadURL('file://' + __dirname + '/index.html' + '?src=' + encodeURIComponent(src));
+    mainWindow.loadURL('file://' + __dirname + '/browser/views/index.html' + '?src=' + encodeURIComponent(src));
 
     mainWindow.on('close', function (e) {
         if (process.platform != 'darwin') {
@@ -240,8 +248,7 @@ app.on('ready', function() {
         mainWindow = null;
     });
 
-    require('./menu');
-
+    menu.load();
 });
 
 app.on('activate', function(e, hasVisibleWindows) {

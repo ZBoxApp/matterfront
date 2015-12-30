@@ -53,7 +53,17 @@ gulp.task('lint', function() {
 });
 
 gulp.task('clean', function(done) {
-    del.sync([ 'src/plugins/**', 'src/plugins/**/.*', '!src/plugins', '!src/plugins/jquery', '!src/plugins/jquery-backstretch', '!src/plugins/**/*.min.js']);
+    del.sync([ 'src/plugins/**',
+        'src/plugins/**/.*',
+        '!src/plugins',
+        '!src/plugins/bootstrap',
+        '!src/plugins/bootstrap/dist',
+        '!src/plugins/bootstrap/dist/css',
+        '!src/plugins/bootstrap/dist/js',
+        '!src/plugins/bootstrap/dist/fonts',
+        '!src/plugins/bootstrap/dist/fonts/*.*',
+        '!src/plugins/jquery',
+        '!src/plugins/**/*.min.*']);
 
     return done();
 });
