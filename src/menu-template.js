@@ -70,6 +70,7 @@ var template = [
                 click: function(item, focusedWindow) {
                     if (focusedWindow)
                         focusedWindow.reload(true);
+                        focusedWindow.webContents.reloadIgnoringCache();
                 }
             },
             {
