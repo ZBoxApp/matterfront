@@ -81,15 +81,5 @@
 
         // initial one time notification
         checkActivity();
-
-        if(window.location.host === "oauth.zboxapp.com") {
-            jQuery('#submit-form').on('click', function() {
-                var data = {
-                    username: jQuery('#username').val(),
-                    password: jQuery('#password').val()
-                };
-                ipc.sendToHost('credentials', data);
-            });
-        }
     });
 })();

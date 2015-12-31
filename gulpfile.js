@@ -18,6 +18,7 @@ function makePackage(platform, arch) {
         platform: platform,
         arch: arch,
         version: packageJson.devDependencies["electron-prebuilt"].replace("^", ""),
+        ignore: 'config.json',
         out: './release',
         cache: './cache',
         sign: 'bruna',

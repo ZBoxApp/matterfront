@@ -9,6 +9,7 @@ var app = require('electron').app,
     fs = require('fs'),
     request = require('request'),
     Q = require('q'),
+    settings = require('./settings');
     menu = require('./menu.js'),
     appName = require('./package.json').name,
     version = require('./package.json').version;
@@ -23,25 +24,10 @@ var mainWindow = null,
     platform = null,
     updateAvailable = false,
     updateReady = false,
-    manualCheck = false,
-    config = {},
-    configPaths = [
-        path.join(app.getAppPath(), 'config.json')
-    ],
-    i = configPaths.length,
-    appIcon = NativeImage.createFromPath(path.join(__dirname, '../../resources/mattermost.ico'));
+    manualCheck = false;
 
 
-for (; --i >= 0;) {
-    try {
-        config = JSON.parse(fs.readFileSync(configPaths[i]));
-        break;
-    } catch(e) {
-        if (e instanceof Error && e.code === 'ENOENT') {
-            // next
-        } else { throw e; }
-    }
-}
+settings.load(app.getAppPath(), app.getPath('userData'));
 
 var handleStartupEvent = function() {
     var desktopShortcut, updatePath, dir, file;
@@ -136,7 +122,7 @@ var verifyService = function(url) {
 };
 
 platform = process.platform + '-' + process.arch;
-updater.setFeedURL(url.resolve(config.services.oauth, 'version/chatDesktop/' + version + '/' + platform));
+updater.setFeedURL(url.resolve(settings.get("services:oauth"), 'version/chatDesktop/' + version + '/' + platform));
 
 app.checkVersion = function(manual) {
     manualCheck = manual;
@@ -144,7 +130,7 @@ app.checkVersion = function(manual) {
 };
 
 app.getService = function() {
-    return config.services.chat;
+    return settings.get("services:chat");
 };
 
 updater.on('error', function(err) {
@@ -206,12 +192,13 @@ app.on('window-all-closed', function() {
 });
 
 app.on('ready', function() {
-    splashWindow = new BrowserWindow({width:config.splash.width, height: config.splash.height, icon: appIcon, frame: false, 'skip-taskbar': true, transparent: true});
-    mainWindow = new BrowserWindow({width: config.window.width, height: config.window.height, icon: appIcon, frame: true, show: false});
+    var splashOpts = settings.get("splash");
+    splashWindow = new BrowserWindow({width: splashOpts.width, height: splashOpts.height, frame: false, 'skip-taskbar': true, transparent: true});
+    mainWindow = new BrowserWindow(settings.get("window"));
 
     splashWindow.loadURL('file://' + __dirname + '/browser/views/splash.html');
 
-    src = config.services.chat || 'file://' + __dirname + '/browser/views/nosrc.html';
+    src = app.getService() || 'file://' + __dirname + '/browser/views/nosrc.html';
 
     splashWindow.on('close', function() {
         if(isValid) {
@@ -229,6 +216,16 @@ app.on('ready', function() {
     mainWindow.loadURL('file://' + __dirname + '/browser/views/index.html' + '?src=' + encodeURIComponent(src));
 
     mainWindow.on('close', function (e) {
+        settings.set('window:fullscreen', mainWindow.isFullScreen());
+        if (!mainWindow.isFullScreen()) {
+            var bounds = mainWindow.getBounds();
+            settings.set('window:x', bounds.x);
+            settings.set('window:y', bounds.y);
+            settings.set('window:width', bounds.width);
+            settings.set('window:height', bounds.height);
+        }
+        settings.save();
+
         if (process.platform != 'darwin') {
             return;
         }
@@ -256,10 +253,9 @@ app.on('activate', function(e, hasVisibleWindows) {
         mainWindow.focus();
     } else {
         if (mainWindow === null) {
-            mainWindow = new BrowserWindow({width: config.window.width, height: config.window.height});
-        } else {
-            mainWindow.show();
+            mainWindow = new BrowserWindow(settings.get("window"));
         }
+        mainWindow.show();
     }
 });
 
@@ -268,7 +264,7 @@ app.on('before-quit', function(e) {
 });
 
 ipc.on('check-services', function(event) {
-    Q.all([ verifyService(url.resolve(config.services.oauth, 'status')), verifyService(config.services.chat) ])
+    Q.all([ verifyService(url.resolve(settings.get("services:oauth"), 'status')), verifyService(app.getService()) ])
         .then(function() {
             return event.sender.send('service-status', true);
         })

@@ -5,7 +5,7 @@
   "homepage": "https://github.com/ZBoxApp/matterfront",
   "author": "Elias Nahum <elias@zboxapp.com> (https://github.com/ZBoxApp)",
   "scripts": {
-    "start": "electron ./src",
+    "start": "electron ./src --dev-mode",
     "build": "electron-packager ./src matterfront --out=dist --ignore='^/dist$' --prune --asar --platform=all --arch=all --version=$npm_package_electronVersion --app-bundle-id='org.matterfront.app' --app-version=$npm_package_version --helper-bundle-id='org.matterfront.app.helper' --overwrite"
   },
   "electronVersion": "0.36.2",

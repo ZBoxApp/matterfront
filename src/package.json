@@ -6,6 +6,8 @@
   "author": "Elias Nahum <elias@zboxapp.com> (https://github.com/ZBoxApp)",
   "license": "MIT",
   "dependencies": {
+    "mkdirp": "^0.5.1",
+    "nconf": "^0.8.2",
     "q": "^1.4.1",
     "request": "^2.67.0"
   },

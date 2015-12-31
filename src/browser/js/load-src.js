@@ -31,11 +31,6 @@
                 case 'mention-count':
                     mentionCount = parseInt(event.args[0], 10);
                     break;
-                case 'credentials':
-                    console.log('set credentials');
-                    console.log(event.args[0]);
-                    localStorage.setItem('credentials', JSON.stringify(event.args[0]));
-                    break;
                 case 'no-team':
                     mainWindow.loadURL('file://' + app.getAppPath() + '/browser/views/find.html');
                     break;
@@ -80,13 +75,6 @@
 
         webview.addEventListener('did-stop-loading', function(event) {
             endLoading();
-        });
-
-        webview.addEventListener('dom-ready', function() {
-            if(webview.getURL().indexOf('oauth.zboxapp.com') > -1) {
-                var credentials = localStorage.credentials ? JSON.parse(localStorage.getItem('credentials')) : null || { username: '', password: ''};
-                webview.executeJavaScript("jQuery('#username').val('"+ credentials.username +"'); jQuery('#password').val('"+ credentials.password +"');");
-            }
         });
 
         webview.addEventListener('crashed', function() {

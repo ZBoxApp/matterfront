@@ -1,6 +1,7 @@
 node_modules
 /dist
 config.json
+state.json
 .tag*
 *npm-debug.log
 .idea
