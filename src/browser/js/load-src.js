@@ -198,6 +198,8 @@
             setTimeout(function() {
                 loading.style.opacity = 0;
                 loading.style['z-index'] = -1;
+                overlay.style.opacity = 0;
+                overlay.style['z-index'] = -1;
             }, 500);
         };
 
