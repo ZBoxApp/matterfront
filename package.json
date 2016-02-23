@@ -1,14 +1,13 @@
 {
   "name": "ZBoxNow",
-  "version": "1.2.0-beta3",
+  "version": "1.2.0-beta4",
   "description": "ZBox Now! frontend app powered by electron",
   "homepage": "https://github.com/ZBoxApp/matterfront",
   "author": "Elias Nahum <elias@zboxapp.com> (https://github.com/ZBoxApp)",
   "scripts": {
-    "start": "electron ./src --dev-mode",
-    "build": "electron-packager ./src matterfront --out=dist --ignore='^/dist$' --prune --asar --platform=all --arch=all --version=$npm_package_electronVersion --app-bundle-id='org.matterfront.app' --app-version=$npm_package_version --helper-bundle-id='org.matterfront.app.helper' --overwrite"
+    "start": "electron ./src --dev-mode"
   },
-  "electronVersion": "0.36.2",
+  "electronVersion": "0.36.8",
   "repository": {
     "type": "git",
     "url": "https://github.com/ZBoxApp/matterfront"
@@ -23,7 +22,7 @@
   },
   "devDependencies": {
     "del": "^2.2.0",
-    "electron-prebuilt": "^0.36.2",
+    "electron-prebuilt": "^0.36.8",
     "grunt": "^0.4.5",
     "grunt-electron-installer": "^1.2.0",
     "gulp": "^3.9.0",
