@@ -1,8 +1,7 @@
 (function() {
     "use strict";
 
-    var ipc = require('electron').ipcRenderer,
-        shell = require('electron').shell;
+    var ipc = require('electron').ipcRenderer;
 
     var mentionCount = 0;
     var unreadCount = 0;
@@ -62,24 +61,27 @@
     document.addEventListener("DOMContentLoaded", function () {
         // observe the DOM for mutations, specifically the .ps-container
         // which contains all the sidebar channels
-        var MutationObserver = window.MutationObserver;
-        var list = document.querySelector('#sidebar-left');
 
-        var observer = new MutationObserver(function (mutations) {
-            if (mutations.length) {
-                checkActivity();
-            }
-        });
+        setTimeout(function() {
+            var MutationObserver = window.MutationObserver;
+            var list = document.querySelector('#sidebar-left');
 
-        if (list) {
-            observer.observe(list, {
-                subtree: true,
-                attributes: true,
-                childList: true
+            var observer = new MutationObserver(function (mutations) {
+                if (mutations.length) {
+                    checkActivity();
+                }
             });
-        }
 
-        // initial one time notification
-        checkActivity();
+            if (list) {
+                observer.observe(list, {
+                    subtree: true,
+                    attributes: true,
+                    childList: true
+                });
+            }
+            // initial one time notification
+            checkActivity();
+        }, 0);
+
     });
 })();
