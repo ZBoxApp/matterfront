@@ -17,9 +17,12 @@
         var notify = false;
         var localMentionCount = 0;
         // get the actual count of mentions from Mattermost
-        $('.unread-title.has-badge .badge').each(function () {
-            localMentionCount += parseInt($(this).text(), 10);
+        var badges = Array.prototype.slice.call(document.querySelectorAll('.unread-title.has-badge .badge'), 0);
+        badges.forEach(function (b) {
+            localMentionCount += parseInt(b.innerText, 10);
         });
+
+        console.log(localMentionCount);
 
         // set flag to notify if the mention count has changed
         if (localMentionCount != mentionCount) {
@@ -27,7 +30,7 @@
             notify = true;
         }
 
-        var localUnreadCount = $('.unread-title').length;
+        var localUnreadCount = document.querySelectorAll('.unread-title').length;
         // set flag to notify if the unread count has changed
         if (localUnreadCount != unreadCount) {
             unreadCount = localUnreadCount;
@@ -81,7 +84,7 @@
             }
             // initial one time notification
             checkActivity();
-        }, 0);
+        }, 1000);
 
     });
 })();

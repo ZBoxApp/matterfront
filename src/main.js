@@ -120,7 +120,10 @@ if (!handleStartupEvent()) {
     };
 
     platform = process.platform + '-' + process.arch;
-    updater.setFeedURL(url.resolve(settings.get("services:oauth"), 'version/chatDesktop/' + version + '/' + platform));
+
+    if (!settings.isDevMode()) {
+        updater.setFeedURL(url.resolve(settings.get("services:oauth"), 'version/chatDesktop/' + version + '/' + platform));
+    }
 
     app.checkVersion = function (manual) {
         manualCheck = manual;
@@ -289,6 +292,18 @@ if (!handleStartupEvent()) {
     });
 
     ipc.on('version', function () {
-        app.checkVersion(false);
+        if (settings.isDevMode()) {
+            if (mainWindow && manualCheck) {
+                mainWindow.webContents.send('no-update');
+            } else if (splashWindow) {
+                isValid = true;
+                splashWindow.webContents.send('ready');
+                setTimeout(function () {
+                    splashWindow.close();
+                }, 1000);
+            }
+        } else {
+            app.checkVersion(false);
+        }
     });
 }

@@ -27,7 +27,7 @@ var os = require('os'),
 var settings = {};
 
 var getConfigHomePath = function() {
-    if (nconf.get("dev-mode")) {
+    if (nconf.get('dev-mode')) {
         console.log('loading dev mode config');
         return path.join(__dirname, 'config.json');
     }
@@ -49,6 +49,10 @@ var fileExists = function(filename) {
     } catch (e) {
         return false;
     }
+};
+
+settings.isDevMode = function() {
+    return nconf.get('dev-mode');
 };
 
 settings.load = function(appPath, userDataPath){

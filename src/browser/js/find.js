@@ -31,13 +31,11 @@
         mainWindow.loadURL('file://' + app.getAppPath() + '/browser/views/index.html?src=' + encodeURIComponent(src));
     }
 
-    loadcss(zboxnowUrl + 'static/css/bootstrap-3.3.5.min.css');
-    loadcss(zboxnowUrl + 'static/css/jasny-bootstrap.min.css');
-    loadcss(zboxnowUrl + 'static/css/bootstrap-colorpicker.min.css');
-    loadcss(zboxnowUrl + 'static/css/styles.css');
-    loadcss(zboxnowUrl + 'static/css/google-fonts.css');
-
-    document.querySelector('.signup-team-logo').setAttribute('src', zboxnowUrl + 'static/images/logo.png');
+    //loadcss(zboxnowUrl + 'static/css/bootstrap-3.3.5.min.css');
+    //loadcss(zboxnowUrl + 'static/css/jasny-bootstrap.min.css');
+    //loadcss(zboxnowUrl + 'static/css/bootstrap-colorpicker.min.css');
+    //loadcss(zboxnowUrl + 'static/css/styles.css');
+    //loadcss(zboxnowUrl + 'static/css/google-fonts.css');
 
     document.addEventListener('DOMContentLoaded', function() {
         var enviar = document.querySelector('[type="submit"]');
